@@ -1806,12 +1806,12 @@ PrefabInstance:
     - target: {fileID: 1375538897275800283, guid: df27c71ae45374f4eb9b40f304d24634,
         type: 3}
       propertyPath: m_text
-      value: Credits
+      value: Team
       objectReference: {fileID: 0}
     - target: {fileID: 2162650245810328270, guid: df27c71ae45374f4eb9b40f304d24634,
         type: 3}
       propertyPath: m_Name
-      value: Credits
+      value: Team
       objectReference: {fileID: 0}
     - target: {fileID: 8214717104186906572, guid: df27c71ae45374f4eb9b40f304d24634,
         type: 3}

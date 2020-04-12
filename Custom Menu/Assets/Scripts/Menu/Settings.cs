@@ -7,7 +7,9 @@ using UnityEngine.UI;
 public class Settings : MonoBehaviour
 {
     [HideInInspector]
-    public float soundsVolume = 1.0f;
+    public float masterVolume = 1.0f;
+    [HideInInspector]
+    public float effectsVolume = 1.0f;
     [HideInInspector]
     public float musicVolume = 1.0f;
     [HideInInspector]
@@ -29,8 +31,10 @@ public class Settings : MonoBehaviour
     void Awake() {
         DontDestroyOnLoad(gameObject);
 
-        if (PlayerPrefs.HasKey("soundsVolume")) soundsVolume = PlayerPrefs.GetFloat("soundsVolume");
-        SetSoundsVolume(soundsVolume);
+        if (PlayerPrefs.HasKey("volume")) masterVolume = PlayerPrefs.GetFloat("volume");
+        SetMasterVolume(masterVolume);
+        if (PlayerPrefs.HasKey("effectsVolume")) effectsVolume = PlayerPrefs.GetFloat("effectsVolume");
+        SetEffectsVolume(effectsVolume);
         if (PlayerPrefs.HasKey("musicVolume")) musicVolume = PlayerPrefs.GetFloat("musicVolume");
         SetMusicVolume(musicVolume);
         if (PlayerPrefs.HasKey("sensibility")) sensibility = PlayerPrefs.GetFloat("sensibility");
@@ -55,22 +59,33 @@ public class Settings : MonoBehaviour
         if (PlayerPrefs.HasKey("resolution")) initialResolutionIndex = PlayerPrefs.GetInt("resolution");
     }
 
+    private void SetVolumeOf(string mixerName, float value) {
+        float ret = 0f;
+
+        if (value <= 0.0001f) ret = Mathf.Log10(0.0001f) * 20;
+        else if (value == 1.0f) ret = Mathf.Log10(0.9999f) * 20;
+        else ret = Mathf.Log10(value) * 20;
+
+        audioMixer.SetFloat(mixerName, ret);
+    }
+
+    public void SetMasterVolume(float value) {
+        musicVolume = value;
+        PlayerPrefs.SetFloat("volume", value);
+        SetVolumeOf("volume", value);
+        print("Setting master to " + value);
+    }
+
     public void SetMusicVolume(float value) { 
         musicVolume = value;
         PlayerPrefs.SetFloat("musicVolume", value);
- 
-        if (value <= 0.0001f) {
-            audioMixer.SetFloat("volume", Mathf.Log10(0.0001f) * 20);
-        } else if(value == 1.0f) {
-            audioMixer.SetFloat("volume", Mathf.Log10(0.9999f) * 20);
-        } else {
-            audioMixer.SetFloat("volume", Mathf.Log10(value) * 20);
-        }
+        SetVolumeOf("musicVolume", value);
     }
 
-    public void SetSoundsVolume(float value) { 
-        soundsVolume = value;
-        PlayerPrefs.SetFloat("soundsVolume", value);
+    public void SetEffectsVolume(float value) { 
+        effectsVolume = value;
+        PlayerPrefs.SetFloat("effectsVolume", value);
+        SetVolumeOf("effectsVolume", value);
     }
 
     public void SetSensibility(float value) { 

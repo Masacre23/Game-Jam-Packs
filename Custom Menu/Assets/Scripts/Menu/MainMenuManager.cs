@@ -12,8 +12,9 @@ public class MainMenuManager : MonoBehaviour
     public GameObject m_panelAnyKey;
     public GameObject m_panelMenu;
 
+    public Scrollbar masterSlider;
     public Scrollbar musicSlider;
-    public Scrollbar soundsSlider;
+    public Scrollbar effectsSlider;
     public Scrollbar sensibilitySlider;
     public TMPro.TMP_Dropdown resolutionDropdown;
     public TMPro.TMP_Dropdown qualityDropdown;
@@ -36,7 +37,8 @@ public class MainMenuManager : MonoBehaviour
         settings = FindObjectOfType<Settings>();
         bgMusic = FindObjectsOfType<AudioSource>();
 
-        soundsSlider.value = settings.soundsVolume;
+        masterSlider.value = settings.masterVolume;
+        effectsSlider.value = settings.effectsVolume;
         musicSlider.value = settings.musicVolume;
         sensibilitySlider.value = settings.sensibility;
         fullscreen.isOn = settings.fullscreen;
@@ -51,7 +53,8 @@ public class MainMenuManager : MonoBehaviour
         StartCoroutine(UnFading());
     }
 
-    public void SetSoundsVolume(float value) { settings.SetSoundsVolume(value); }
+    public void SetMasterVolume(float value) { settings.SetMasterVolume(value); }
+    public void SetEffectsVolume(float value) { settings.SetEffectsVolume(value); }
     public void SetMusicVolume(float value) { settings.SetMusicVolume(value); }
     public void SetSensibility(float value) { settings.SetSensibility(value); }
     public void SetQuality(int value) { settings.SetQuality(value); }

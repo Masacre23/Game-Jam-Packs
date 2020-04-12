@@ -6,52 +6,58 @@ using UnityEngine.UI;
 
 public class Settings : MonoBehaviour
 {
-    private float soundsVolume = 1.0f;
-    private float musicVolume = 1.0f;
-    private float sensibility = 1.0f;
-
-    public Scrollbar musicSlider;
-    public Scrollbar effectsSlider;
-    public Scrollbar sensibilitySlider;
+    [HideInInspector]
+    public float soundsVolume = 1.0f;
+    [HideInInspector]
+    public float musicVolume = 1.0f;
+    [HideInInspector]
+    public float sensibility = 1.0f;
+    [HideInInspector]
+    public List<string> resolutionsNames = new List<string>();
+    [HideInInspector]
+    public int initialResolutionIndex = 0;
+    [HideInInspector]
+    public bool fullscreen = true;
+    [HideInInspector]
+    public int quality;
 
     public AudioMixer audioMixer;
 
-    public TMPro.TMP_Dropdown resolutionDropdown;
     List<Resolution> resolutions = new List<Resolution>();
 
 
-    void Start() {
+    void Awake() {
         DontDestroyOnLoad(gameObject);
 
-        effectsSlider.value = soundsVolume;
+        if (PlayerPrefs.HasKey("soundsVolume")) soundsVolume = PlayerPrefs.GetFloat("soundsVolume");
         SetSoundsVolume(soundsVolume);
-        musicSlider.value = musicVolume;
+        if (PlayerPrefs.HasKey("musicVolume")) musicVolume = PlayerPrefs.GetFloat("musicVolume");
         SetMusicVolume(musicVolume);
-        sensibilitySlider.value = sensibility;
+        if (PlayerPrefs.HasKey("sensibility")) sensibility = PlayerPrefs.GetFloat("sensibility");
         SetSensibility(sensibility);
+        if (PlayerPrefs.HasKey("quality")) quality = PlayerPrefs.GetInt("quality");
+        SetQuality(quality);
+        if (PlayerPrefs.HasKey("fullscreen")) fullscreen = System.Convert.ToBoolean(PlayerPrefs.GetInt("fullscreen"));
+        SetFullscreen(fullscreen);
 
         foreach (Resolution r in Screen.resolutions) {
             if(r.refreshRate == Screen.currentResolution.refreshRate)
                 resolutions.Add(r);
         }
 
-        resolutionDropdown.ClearOptions();
-        List<string> resolutionsNames = new List<string>();
-
-        int currentResolutionIndex = 0;
         for(int i =0; i < resolutions.Count; i++) {
             resolutionsNames.Add(resolutions[i].width + " x " + resolutions[i].height);
 
             if(resolutions[i].width == Screen.currentResolution.width && resolutions[i].height == Screen.currentResolution.height)
-                currentResolutionIndex = i;
+                initialResolutionIndex = i;
         }
-        resolutionDropdown.AddOptions(resolutionsNames);
-        resolutionDropdown.value = currentResolutionIndex;
-        resolutionDropdown.RefreshShownValue();
+
+        if (PlayerPrefs.HasKey("resolution")) initialResolutionIndex = PlayerPrefs.GetInt("resolution");
     }
 
     public void SetMusicVolume(float value) { 
         musicVolume = value;
+        PlayerPrefs.SetFloat("musicVolume", value);
  
         if (value <= 0.0001f) {
             audioMixer.SetFloat("volume", Mathf.Log10(0.0001f) * 20);
@@ -62,16 +68,30 @@ public class Settings : MonoBehaviour
         }
     }
 
-    public void SetSoundsVolume(float value) { soundsVolume = value; }
+    public void SetSoundsVolume(float value) { 
+        soundsVolume = value;
+        PlayerPrefs.SetFloat("soundsVolume", value);
+    }
 
-    public void SetSensibility(float value) { sensibility = value; }
+    public void SetSensibility(float value) { 
+        sensibility = value;
+        PlayerPrefs.SetFloat("sensibility", value);
+    }
 
-    public void SetQuality (int value) { QualitySettings.SetQualityLevel(value); }
+    public void SetQuality (int value) {
+        PlayerPrefs.SetInt("quality", value);
+        QualitySettings.SetQualityLevel(value);
+    }
 
-    public void SetFullscreen (bool value) { Screen.fullScreen = value; }
+    public void SetFullscreen (bool value) { 
+        Screen.fullScreen = value;
+        fullscreen = value;
+        PlayerPrefs.SetInt("fullscreen", System.Convert.ToInt32(value));
+    }
 
     public void SetResolution(int value) {
         Resolution resolution = resolutions[value];
-        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen); 
+        Screen.SetResolution(resolution.width, resolution.height, Screen.fullScreen);
+        PlayerPrefs.SetInt("resolution", value);
     }
 }

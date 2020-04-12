@@ -12,9 +12,12 @@ public class MainMenuManager : MonoBehaviour
     public GameObject m_panelAnyKey;
     public GameObject m_panelMenu;
 
-  /*  public Slider musicSlider;
-    public Slider effectsSlider;
-    public Slider sensibilitySlider;*/
+    public Scrollbar musicSlider;
+    public Scrollbar soundsSlider;
+    public Scrollbar sensibilitySlider;
+    public TMPro.TMP_Dropdown resolutionDropdown;
+    public TMPro.TMP_Dropdown qualityDropdown;
+    public Toggle fullscreen;
 
     public SplineController splineController;
 
@@ -23,54 +26,38 @@ public class MainMenuManager : MonoBehaviour
     float counter = 72f;
 
     GameManager gameManager;
+    Settings settings;
 
     AudioSource[] bgMusic;
 
     void Start()
     {
         gameManager = FindObjectOfType<GameManager>();
+        settings = FindObjectOfType<Settings>();
         bgMusic = FindObjectsOfType<AudioSource>();
 
-        /*effectsSlider.value = OptionsObject.Instance.sfxVolumeValue;
-        musicSlider.value = OptionsObject.Instance.musicVolumeValue;
-        sensibilitySlider.value = OptionsObject.Instance.sensibility;*/
+        soundsSlider.value = settings.soundsVolume;
+        musicSlider.value = settings.musicVolume;
+        sensibilitySlider.value = settings.sensibility;
+        fullscreen.isOn = settings.fullscreen;
+
+        resolutionDropdown.ClearOptions();
+        resolutionDropdown.AddOptions(settings.resolutionsNames);
+        resolutionDropdown.value = settings.initialResolutionIndex;
+        resolutionDropdown.RefreshShownValue();
+
+        qualityDropdown.value = settings.quality;
 
         StartCoroutine(UnFading());
     }
 
-   /* public void SfxSliderChanged(float value)
-    {
-        OptionsObject.Instance.sfxVolumeValue = value;
-    }
+    public void SetSoundsVolume(float value) { settings.SetSoundsVolume(value); }
+    public void SetMusicVolume(float value) { settings.SetMusicVolume(value); }
+    public void SetSensibility(float value) { settings.SetSensibility(value); }
+    public void SetQuality(int value) { settings.SetQuality(value); }
+    public void SetFullscreen(bool value) { settings.SetFullscreen(value); }
+    public void SetResolution(int value) { settings.SetResolution(value); }
 
-    public void MusicSliderChanged(float value)
-    {
-        OptionsObject.Instance.musicVolumeValue = value;
-        for (int i = 0; i < bgMusic.Length; i++)
-        {
-            bgMusic[i].volume = value;
-        }
-    }
-
-    public void SensibilitySliderChanged(float value)
-    {
-        OptionsObject.Instance.sensibility = value;
-    }
-
-    private void OnEnable()
-    {
-        m_effectsVolume.onValueChanged.AddListener(SfxSliderChanged);
-        musicSlider.onValueChanged.AddListener(MusicSliderChanged);
-        m_sensibility.onValueChanged.AddListener(SensibilitySliderChanged);
-    }
-
-    private void OnDisable()
-    {
-        m_effectsVolume.onValueChanged.RemoveListener(SfxSliderChanged);
-        musicSlider.onValueChanged.RemoveListener(MusicSliderChanged);
-        m_sensibility.onValueChanged.RemoveListener(SensibilitySliderChanged);
-    }
-    */
     void Update()
     {
 
@@ -91,20 +78,6 @@ public class MainMenuManager : MonoBehaviour
             }
         }
     }
-
-   /* public void PlayButtonSound()
-    {
-        bool gameWasPaused = gameManager.gamePaused;
-        if (gameWasPaused)
-        {
-            Time.timeScale = 1.0f;
-        }
-        gameManager.audioManager.PlayOneShot(gameManager.audioManager.button, Camera.main.transform.position);
-        if (gameWasPaused)
-        {
-            Time.timeScale = 0.0f;
-        }
-    }*/
 
     public void Play() { SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex + 1);}
 

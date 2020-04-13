@@ -33,6 +33,9 @@ public class MainMenuManager : MonoBehaviour
 
     void Start()
     {
+        fadePanel.gameObject.SetActive(true);
+        StartCoroutine(UnFading());
+
         gameManager = FindObjectOfType<GameManager>();
         settings = FindObjectOfType<Settings>();
         bgMusic = FindObjectsOfType<AudioSource>();
@@ -49,8 +52,6 @@ public class MainMenuManager : MonoBehaviour
         resolutionDropdown.RefreshShownValue();
 
         qualityDropdown.value = settings.quality;
-
-        StartCoroutine(UnFading());
     }
 
     public void SetMasterVolume(float value) { settings.SetMasterVolume(value); }

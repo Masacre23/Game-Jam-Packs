@@ -325,7 +325,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 433ad1b2761c2a84082643ee5ba65d86, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  sceneToLoad: SampleScene
+  sceneToLoad: MainMenu
   timeBetweenTexts: 3
   texts:
   - {fileID: 711061548}

@@ -21,7 +21,7 @@ public class Settings : MonoBehaviour
     [HideInInspector]
     public bool fullscreen = true;
     [HideInInspector]
-    public int quality;
+    public int quality = 5;
 
     public AudioMixer audioMixer;
 
@@ -73,7 +73,6 @@ public class Settings : MonoBehaviour
         musicVolume = value;
         PlayerPrefs.SetFloat("volume", value);
         SetVolumeOf("volume", value);
-        print("Setting master to " + value);
     }
 
     public void SetMusicVolume(float value) { 
